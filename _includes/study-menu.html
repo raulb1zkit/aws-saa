@@ -1,0 +1,15 @@
+<nav class="lesson-nav" aria-label="Lecturas">
+  <a href="{{ '/' | relative_url }}"{% if page.url == '/' or page.url == '/index.html' %} aria-current="page"{% endif %}>Índice</a>
+  <p class="nav-label">Fundamentos</p>
+  <ol>
+    {% assign lessons = site.pages | where_exp: 'lesson', 'lesson.study_order' | sort: 'study_order' %}
+    {% for lesson in lessons %}
+      <li>
+        <a href="{{ lesson.url | relative_url }}"{% if page.url == lesson.url %} aria-current="page"{% endif %}>
+          <span class="lesson-number" aria-hidden="true">{{ lesson.study_order | prepend: '0' | slice: -2, 2 }}</span>
+          <span>{{ lesson.title | escape }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ol>
+</nav>

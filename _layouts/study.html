@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ site.description | escape }}">
+  <title>{% if page.title and page.study_order %}{{ page.title | escape }} · {% endif %}{{ site.title | escape }}</title>
+  <link rel="stylesheet" href="{{ '/assets/study.css' | relative_url }}">
+</head>
+<body>
+  <a class="skip-link" href="#lectura">Ir a la lectura</a>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="{{ '/' | relative_url }}">AWS<span>SAA</span></a>
+      <a class="source-link" href="https://github.com/raulb1zkit/aws-saa">GitHub</a>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar">
+      {% include study-menu.html %}
+    </aside>
+    <details class="compact-menu">
+      <summary>Menú de lecturas</summary>
+      {% include study-menu.html %}
+    </details>
+    <main id="lectura" class="reading" tabindex="-1">
+      {{ content }}
+    </main>
+  </div>
+</body>
+</html>
