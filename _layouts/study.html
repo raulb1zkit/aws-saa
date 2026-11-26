@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="{{ site.lang }}">
+<html lang="{{ page.lang | default: site.lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ site.description | escape }}">
-  <title>{% if page.title and page.study_order %}{{ page.title | escape }} · {% endif %}{{ site.title | escape }}</title>
+  <title>{% if page.title %}{{ page.title | escape }} · {% endif %}{{ site.title | escape }}</title>
   <link rel="stylesheet" href="{{ '/assets/study.css' | relative_url }}">
 </head>
 <body>
@@ -12,7 +12,10 @@
   <header class="masthead">
     <div class="masthead-inner">
       <a class="brand" href="{{ '/' | relative_url }}">AWS<span>SAA</span></a>
-      <a class="source-link" href="https://github.com/raulb1zkit/aws-saa">GitHub</a>
+      <div class="header-links">
+        <a class="test-link" href="{{ '/fundamentos/test-01-05.html' | relative_url }}"{% if page.url == '/fundamentos/test-01-05.html' %} aria-current="page"{% endif %}>Test 1–5</a>
+        <a class="source-link" href="https://github.com/raulb1zkit/aws-saa">GitHub</a>
+      </div>
     </div>
   </header>
   <div class="shell">

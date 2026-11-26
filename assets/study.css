@@ -33,6 +33,15 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outli
 .brand { font-size: 1.15rem; font-weight: 750; letter-spacing: .04em; text-decoration: none; }
 .brand span { margin-left: .4em; color: #bce3ce; }
 .source-link { font-size: .9rem; }
+.header-links { display: flex; align-items: center; gap: 1rem; }
+.test-link { padding: .3rem .7rem; border: 1px solid #bce3ce; border-radius: .4rem; font-size: .9rem; font-weight: 700; text-decoration: none; }
+.test-link:hover, .test-link[aria-current] { background: #255049; }
+.quiz-question { margin: .85rem 0; border: 1px solid var(--border); border-radius: .5rem; background: var(--paper); }
+.quiz-question > summary { padding: .85rem 1rem; cursor: pointer; font-weight: 700; }
+.quiz-body { padding: 0 1rem 1rem; }
+.quiz-answer { margin-top: 1rem; padding: .65rem .85rem; border-left: 3px solid var(--accent); background: var(--accent-soft); }
+.quiz-answer > summary { cursor: pointer; font-weight: 700; }
+.quiz-answer p:last-child { margin-bottom: 0; }
 
 .shell {
   max-width: 76rem;
