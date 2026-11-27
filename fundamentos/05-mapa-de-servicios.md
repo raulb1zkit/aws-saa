@@ -81,4 +81,6 @@ Consultadas el 24 de noviembre de 2026.
 - [Cuándo elegir SNS, SQS o EventBridge](https://docs.aws.amazon.com/decision-guides/latest/decision-guides/sns-or-sqs-or-eventbridge.html), [colas SQS Standard](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues.html) y [visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)
 - [CloudTrail y CloudWatch](https://docs.aws.amazon.com/decision-guides/latest/decision-guides/cloudtrail-or-cloudwatch.html), [eventos de S3 en CloudTrail](https://docs.aws.amazon.com/AmazonS3/latest/userguide/cloudtrail-logging-s3-info.html) y [conceptos de AWS Config](https://docs.aws.amazon.com/config/latest/developerguide/config-concepts.html)
 
+[Comprobar este tema con el test 05](test-05.md) · [Todos los tests](tests.md)
+
 [Índice de estudio](../README.md) · [Lectura anterior](04-iam-y-acceso.md) · [Lectura siguiente](06-criterios-de-arquitectura.md)

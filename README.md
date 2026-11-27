@@ -8,7 +8,7 @@ Preparación para el **SAA-C03 en inglés**, con el 18–24 de enero de 2027 com
 
 ## Empieza por Fundamentos de AWS
 
-[Hacer el test de Fundamentos 1–5](fundamentos/test-01-05.md): 25 preguntas en inglés, con preguntas y soluciones desplegables para comprobar lo que has entendido hasta el mapa de servicios.
+[Tests de todos los Fundamentos](fundamentos/tests.md): un test por tema y un [repaso completo 1–7](fundamentos/test-01-07.md) de 39 preguntas. Preguntas y opciones en inglés, con soluciones desplegables en inglés y explicaciones en español dentro de cada pregunta. También se conserva el [test original 1–5](fundamentos/test-01-05.md).
 
 Los tiempos son estimaciones de primera lectura y admiten pausas. Puedes leer los documentos desde el móvil o cualquier visor de Markdown. Las fuentes son para contrastar y ampliar, y los ejemplos incluyen el contexto necesario en el propio texto.
 

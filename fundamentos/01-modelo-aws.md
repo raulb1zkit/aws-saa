@@ -78,4 +78,6 @@ Consultadas el 24 de noviembre de 2026.
 - [Referencia de ARN](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html)
 - [Límites de aislamiento de fallos y planos de AWS](https://docs.aws.amazon.com/whitepapers/latest/aws-fault-isolation-boundaries/welcome.html)
 
+[Comprobar este tema con el test 01](test-01.md) · [Todos los tests](tests.md)
+
 [Índice de estudio](../README.md) · [Lectura siguiente](02-infraestructura-global.md)

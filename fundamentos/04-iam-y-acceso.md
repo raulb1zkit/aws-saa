@@ -88,4 +88,6 @@ Consultadas el 24 de noviembre de 2026.
 - [OIDC de GitHub Actions en AWS](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws)
 - [Acciones, recursos y condiciones de S3](https://docs.aws.amazon.com/service-authorization/latest/reference/list_s3.html)
 
+[Comprobar este tema con el test 04](test-04.md) · [Todos los tests](tests.md)
+
 [Índice de estudio](../README.md) · [Lectura anterior](03-responsabilidad-compartida.md) · [Lectura siguiente](05-mapa-de-servicios.md)

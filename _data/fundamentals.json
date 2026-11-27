@@ -1,0 +1,563 @@
+[
+  {
+    "id": 1,
+    "title": "How AWS works",
+    "reading": "01-modelo-aws.md",
+    "questions": [
+      {
+        "label": "Account and Region",
+        "prompt": "An engineer cannot find an EC2 instance that a colleague created. What should the engineer check first? Choose ONE.",
+        "options": [
+          "Whether both are using the same AWS account and Region, and whether console filters hide the instance.",
+          "Whether both have the same AWS Builder ID.",
+          "Whether the instance has an S3 bucket ARN.",
+          "Whether the account has only one IAM identity."
+        ],
+        "answer": "A",
+        "en": "Account and Region determine where to look for regional resources. Different people can use different identities in the same account. Filters can also hide resources.",
+        "es": "La cuenta y la región indican dónde buscar un recurso regional. Dos personas pueden usar identidades distintas dentro de la misma cuenta; no necesitan compartir Builder ID. Comprueba también los filtros de la consola. Un ARN de S3 no identifica una instancia EC2."
+      },
+      {
+        "label": "Caller identity",
+        "prompt": "You are about to run an AWS CLI command. Which command shows the account and ARN of the identity currently making requests? Choose ONE.",
+        "options": [
+          "aws s3 ls",
+          "aws sts get-caller-identity",
+          "aws ec2 describe-regions",
+          "aws configure list-profiles"
+        ],
+        "answer": "B",
+        "en": "STS GetCallerIdentity identifies the caller. Listing buckets, Regions or profile names does not establish which principal is making this request.",
+        "es": "El comando aws sts get-caller-identity devuelve la cuenta y el ARN de quien hace la petición. Ver perfiles disponibles no demuestra cuál está activo, y listar buckets o regiones tampoco confirma la identidad efectiva."
+      },
+      {
+        "label": "Control plane and data plane",
+        "prompt": "Which operation is a data plane operation? Choose ONE.",
+        "options": [
+          "Creating an EC2 instance.",
+          "Changing a bucket policy.",
+          "Downloading an object from S3.",
+          "Enabling bucket versioning."
+        ],
+        "answer": "C",
+        "en": "Downloading an object uses the stored data. Creating infrastructure and changing policies or versioning are control plane operations.",
+        "es": "Descargar un objeto usa los datos almacenados: es data plane. Crear una instancia o cambiar una política o el versionado configura recursos: es control plane. Piensa en usar los datos frente a administrar el servicio."
+      },
+      {
+        "label": "Reading an ARN",
+        "prompt": "Consider arn:aws:s3:::training-reports/reports/*. What does this ARN pattern identify? Choose ONE.",
+        "options": [
+          "Every bucket in the account.",
+          "An IAM role named reports.",
+          "An S3 bucket stored in every AWS Region.",
+          "Objects whose keys start with reports/ in the training-reports bucket."
+        ],
+        "answer": "D",
+        "en": "The part after the bucket name selects object keys. Missing Region and account fields in this S3 ARN do not mean the data is stored globally.",
+        "es": "El patrón selecciona objetos del bucket training-reports cuya clave comienza por reports/. No identifica un rol ni todos los buckets. Que el ARN de S3 omita región y cuenta no significa que los datos estén en todas las regiones."
+      },
+      {
+        "label": "Accounts and Organizations",
+        "prompt": "A company wants separate administrative boundaries for production and labs, with centralized account management and consolidated billing. Which approach fits? Choose ONE.",
+        "options": [
+          "Use separate AWS accounts managed with AWS Organizations.",
+          "Use two tags in one account as the only isolation control.",
+          "Use separate CLI profiles as the only resource boundary.",
+          "Put production and labs in different folders in one S3 bucket."
+        ],
+        "answer": "A",
+        "en": "Accounts provide administrative and isolation boundaries. Organizations manages member accounts and consolidated billing. Tags, profiles and object prefixes do not create account boundaries.",
+        "es": "Las cuentas separadas crean límites administrativos y de aislamiento. Organizations permite gestionarlas conjuntamente y consolidar facturación. Etiquetas, perfiles de CLI y prefijos de S3 ayudan a organizar, pero no crean ese límite entre cuentas."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Regions Availability Zones and edge",
+    "reading": "02-infraestructura-global.md",
+    "questions": [
+      {
+        "label": "Availability Zone failure",
+        "prompt": "Two web servers are in different subnets in the same Availability Zone. What happens to their resilience against a full AZ outage? Choose ONE.",
+        "options": [
+          "Different subnets guarantee survival of the outage.",
+          "Both servers still share the failure risk of that AZ.",
+          "The servers automatically move to another Region.",
+          "An edge location becomes a replacement AZ."
+        ],
+        "answer": "B",
+        "en": "A subnet belongs to one AZ. To tolerate an AZ outage, the critical path needs working capacity and dependencies in another AZ.",
+        "es": "Una subred pertenece a una sola AZ. Aunque sean dos subredes, ambos servidores dependen de la misma zona. Para soportar su pérdida necesitas capacidad y dependencias operativas en otra AZ; una ubicación edge no sustituye esa arquitectura."
+      },
+      {
+        "label": "Regional recovery",
+        "prompt": "An application uses multiple AZs in one Region. It must also recover from loss of that entire Region. What additional design is needed? Choose ONE.",
+        "options": [
+          "More subnets in the existing AZs only.",
+          "A larger instance in the same Region only.",
+          "A tested recovery design in another Region, including data, capacity, permissions and traffic routing.",
+          "A new tag called DisasterRecovery."
+        ],
+        "answer": "C",
+        "en": "Multi-AZ deployment addresses zonal failure within a Region. Regional recovery needs usable data and dependencies outside the affected Region, plus a way to restore service.",
+        "es": "Multi-AZ cubre fallos de zona dentro de una región. Ante la pérdida regional necesitas datos recuperables, capacidad, permisos y encaminamiento en otra región, además de probar la recuperación. Más subredes o una instancia mayor en la región afectada no resuelven ese fallo."
+      },
+      {
+        "label": "Resource scope",
+        "prompt": "Which statement about VPCs, subnets and EBS volumes is correct? Choose ONE.",
+        "options": [
+          "A VPC is limited to one AZ, but a subnet spans a Region.",
+          "An EBS volume can attach directly to an instance in any AZ.",
+          "A subnet spans all Regions in an account.",
+          "A VPC is regional; a subnet belongs to one AZ; an EBS volume attaches to an instance in the same AZ."
+        ],
+        "answer": "D",
+        "en": "A VPC can contain subnets in several AZs. EBS volumes and EC2 instances must be in the same AZ for attachment.",
+        "es": "La VPC es regional y puede contener subredes en varias AZ. Cada subred pertenece a una AZ y un volumen EBS se conecta a una instancia de su misma AZ. Para recuperar sus datos en otra zona puedes crear otro volumen desde un snapshot disponible."
+      },
+      {
+        "label": "DNS and content delivery",
+        "prompt": "A documentation website has a regional origin and readers around the world. Which combination provides public DNS and caches content near readers? Choose ONE.",
+        "options": [
+          "Route 53 for DNS and CloudFront for content delivery.",
+          "CloudFront for DNS and IAM for caching.",
+          "EBS for DNS and Route 53 for caching.",
+          "SQS for DNS and RDS for edge delivery."
+        ],
+        "answer": "A",
+        "en": "Route 53 resolves DNS names. CloudFront delivers content through edge locations and can serve cached objects, reducing requests to the origin.",
+        "es": "Route 53 resuelve el nombre DNS. CloudFront entrega contenido desde ubicaciones edge y puede responder desde caché sin consultar el origen. IAM controla permisos; EBS almacena bloques; SQS gestiona mensajes: ninguno sustituye esa combinación."
+      },
+      {
+        "label": "S3 location and redundancy",
+        "prompt": "Which statement correctly describes S3 Standard? Choose ONE.",
+        "options": [
+          "Its bucket ARN contains no Region, so its objects must be replicated to every Region.",
+          "It stores data redundantly across multiple AZs in the selected Region.",
+          "It stores all data in one AZ, like S3 One Zone-IA.",
+          "Creating the bucket automatically provides application recovery in another Region."
+        ],
+        "answer": "B",
+        "en": "S3 Standard uses multiple AZs within the bucket Region. That redundancy does not create a complete recovery design in another Region.",
+        "es": "S3 Standard conserva redundancia en varias AZ de la región del bucket. No replica automáticamente a todas las regiones ni prepara la recuperación completa de tu aplicación. S3 One Zone-IA tiene un diseño distinto, limitado a una AZ."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Shared responsibility",
+    "reading": "03-responsabilidad-compartida.md",
+    "questions": [
+      {
+        "label": "EC2 patching",
+        "prompt": "A Linux package inside an EC2 instance has a security vulnerability. Who is responsible for applying the guest operating system patch? Choose ONE.",
+        "options": [
+          "AWS, because EC2 is a cloud service.",
+          "The physical data center operator only.",
+          "The customer managing the instance.",
+          "Route 53."
+        ],
+        "answer": "C",
+        "en": "AWS operates the physical infrastructure and virtualization. The customer manages the guest OS and installed applications on EC2.",
+        "es": "En EC2, el sistema operativo invitado y sus paquetes los administra el cliente. AWS mantiene la infraestructura física y la virtualización. Que el servidor esté en la nube no traslada a AWS los parches del Linux que has instalado."
+      },
+      {
+        "label": "Managed containers",
+        "prompt": "A container running on ECS with Fargate includes a vulnerable application library. What should the application team do? Choose ONE.",
+        "options": [
+          "Wait for AWS to rewrite the application code.",
+          "Patch the physical host directly.",
+          "Move the image to ECR and assume the library is fixed.",
+          "Update the dependency, rebuild the image and deploy the corrected version."
+        ],
+        "answer": "D",
+        "en": "Fargate manages the hosting infrastructure. Application code, dependencies and container images remain the customer’s responsibility. ECR stores images; storing one does not repair it.",
+        "es": "Fargate administra los hosts, pero el código y las dependencias de la imagen siguen siendo tuyos. Debes corregir la biblioteca, reconstruir la imagen y desplegarla. ECR almacena imágenes; subir la imagen vulnerable no la corrige."
+      },
+      {
+        "label": "RDS responsibilities",
+        "prompt": "After moving PostgreSQL from EC2 to Amazon RDS, which responsibility remains with the customer? Choose ONE.",
+        "options": [
+          "Managing database users, permissions, network access and recovery settings.",
+          "Replacing failed physical disks.",
+          "Maintaining the data center power supply.",
+          "Patching the RDS host operating system directly."
+        ],
+        "answer": "A",
+        "en": "RDS takes over infrastructure operations and managed maintenance. Customers still configure access, database permissions, backups and recovery requirements.",
+        "es": "RDS gestiona infraestructura y mantenimiento del servicio. Tú sigues definiendo usuarios de PostgreSQL, permisos, acceso de red, configuración de backups y recuperación. No accedes al host para parchearlo ni sustituyes sus discos físicos."
+      },
+      {
+        "label": "Encryption and authorization",
+        "prompt": "An S3 bucket is encrypted at rest. An application role can read sensitive objects it does not need. Which control should be reviewed first? Choose ONE.",
+        "options": [
+          "The physical location of the disks.",
+          "Authorization policies and least privilege for the role and bucket.",
+          "The CloudFront cache lifetime only.",
+          "The number of AZs used by S3 Standard."
+        ],
+        "answer": "B",
+        "en": "Encryption at rest does not stop a principal that is authorized to read an object. Reduce unnecessary read permissions. Encryption and authorization address different risks.",
+        "es": "El cifrado en reposo protege los datos almacenados, pero una identidad autorizada puede leerlos. Si el rol accede a más de lo necesario, revisa políticas y mínimo privilegio. Cambiar la caché o la redundancia no elimina ese permiso sobrante."
+      },
+      {
+        "label": "Keys and secrets",
+        "prompt": "An application needs a managed place to retrieve a database password, with rotation in a supported configuration. Which service fits? Choose ONE.",
+        "options": [
+          "AWS Config.",
+          "Amazon EBS.",
+          "AWS Secrets Manager.",
+          "AWS KMS as a database-password store."
+        ],
+        "answer": "C",
+        "en": "Secrets Manager stores secret values and supports their lifecycle and rotation. KMS manages encryption keys and cryptographic operations; it is not the application password store.",
+        "es": "Secrets Manager guarda valores secretos, como contraseñas, y permite rotarlos en configuraciones compatibles. KMS administra claves de cifrado y operaciones criptográficas. Config registra configuración y EBS proporciona almacenamiento en bloques."
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "IAM and access",
+    "reading": "04-iam-y-acceso.md",
+    "questions": [
+      {
+        "label": "Workload credentials",
+        "prompt": "An application on EC2 must read a specific S3 prefix without storing long-lived access keys. What is the best fit? Choose ONE.",
+        "options": [
+          "Create root access keys and place them in the image.",
+          "Put an IAM user password in the source repository.",
+          "Make the entire bucket public.",
+          "Attach an IAM role through an instance profile and grant only the required S3 access."
+        ],
+        "answer": "D",
+        "en": "The application can obtain temporary role credentials through the EC2 environment. Scope the permissions to its required actions and resources.",
+        "es": "El rol asociado mediante instance profile permite a la aplicación obtener credenciales temporales sin incrustar claves permanentes. Sus permisos deben limitarse a las acciones y al prefijo necesarios. Hacer público el bucket o guardar claves de root amplía innecesariamente el acceso."
+      },
+      {
+        "label": "Trust and permissions",
+        "prompt": "What is the difference between a role trust policy and its permissions policies? Choose ONE.",
+        "options": [
+          "Trust controls who can assume the role; permissions control what the resulting session can do.",
+          "Trust controls object encryption; permissions control DNS.",
+          "Trust grants all AWS actions automatically.",
+          "The two policies always contain identical statements."
+        ],
+        "answer": "A",
+        "en": "Assuming a role and using the resulting session are separate authorization questions. Being trusted to assume a role does not mean the session can perform every action.",
+        "es": "La trust policy decide quién puede asumir el rol y bajo qué condiciones. Las políticas de permisos deciden qué puede hacer después la sesión. Poder entrar en el rol no concede automáticamente todas las acciones de AWS."
+      },
+      {
+        "label": "Bucket and object permissions",
+        "prompt": "A role has only s3:GetObject on arn:aws:s3:::training-reports/reports/*. No other permissions or denies apply, and the objects use SSE-S3. Which operation does this statement allow? Choose ONE.",
+        "options": [
+          "Listing every key in the bucket.",
+          "Reading an object with a key such as reports/january.csv.",
+          "Deleting reports/january.csv.",
+          "Reading payroll/january.csv."
+        ],
+        "answer": "B",
+        "en": "GetObject applies to matching object ARNs. Listing needs ListBucket on the bucket ARN; deletion needs its own action. The payroll/ prefix is outside this resource pattern.",
+        "es": "GetObject permite leer objetos que coincidan con reports/*. No concede ListBucket para enumerar claves ni DeleteObject para borrarlas. payroll/ queda fuera del patrón. El enunciado excluye otros permisos y usa SSE-S3 para centrar la evaluación en esta política."
+      },
+      {
+        "label": "Explicit deny and SCPs",
+        "prompt": "A role policy allows an action, but an applicable SCP explicitly denies that action in a member account. What is the result? Choose ONE.",
+        "options": [
+          "The role Allow overrides the SCP.",
+          "MFA automatically overrides the Deny.",
+          "The action is denied; an SCP limits permissions and does not grant them.",
+          "The request succeeds if it comes from the console."
+        ],
+        "answer": "C",
+        "en": "An applicable explicit Deny overrides an Allow. SCPs define limits for principals in member accounts; they do not supply the permissions needed to perform an action.",
+        "es": "Una denegación explícita aplicable gana a un Allow. Las SCP limitan el máximo de permisos de los principales de cuentas miembro, pero no los conceden. Usar consola o MFA no anula esa denegación."
+      },
+      {
+        "label": "Human access and ECS roles",
+        "prompt": "Which TWO statements are correct? Choose TWO.",
+        "options": [
+          "IAM groups issue temporary credentials directly to ECS containers.",
+          "The ECS task execution role is always the application’s role for reading business data from S3.",
+          "IAM Identity Center is the service that stores container images.",
+          "IAM Identity Center supports centralized federated workforce access to AWS accounts.",
+          "An ECS task role provides AWS permissions to application code inside the task."
+        ],
+        "answer": "D and E",
+        "en": "Identity Center supports human workforce access. The ECS task role is for the application; the task execution role supports agent operations such as pulling images or sending logs. IAM groups group IAM users, and ECR stores container images.",
+        "es": "Identity Center centraliza el acceso federado de personas a cuentas AWS. En ECS, el task role da permisos al código de la aplicación; el task execution role cubre operaciones del agente, como obtener imágenes o enviar logs. Los grupos IAM agrupan usuarios y ECR guarda imágenes."
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "AWS service map",
+    "reading": "05-mapa-de-servicios.md",
+    "questions": [
+      {
+        "label": "Compute choices",
+        "prompt": "A team wants to run a persistent containerized API without managing container hosts. Which combination fits? Choose ONE.",
+        "options": [
+          "ECS with Fargate, with container images stored in ECR.",
+          "ECR alone, because storing an image starts the API.",
+          "S3 with EBS, because both orchestrate containers.",
+          "Route 53 with CloudTrail, because both execute application code."
+        ],
+        "answer": "A",
+        "en": "ECS orchestrates the tasks, Fargate supplies managed container capacity, and ECR stores images. EC2 suits workloads needing host control; Lambda suits bounded work triggered by invocations or events.",
+        "es": "ECS orquesta las tareas, Fargate aporta capacidad sin administrar hosts y ECR guarda las imágenes. Almacenar una imagen no la ejecuta. EC2 encaja si necesitas control del host; Lambda usa un modelo de funciones invocadas para trabajo acotado."
+      },
+      {
+        "label": "Storage and database choices",
+        "prompt": "Which TWO service choices match the requirements? Choose TWO.",
+        "options": [
+          "Use S3 as a drop-in NFS mount for an unchanged application that requires shared filesystem semantics.",
+          "Use EFS when compatible Linux clients need a shared NFS filesystem.",
+          "Use EBS as one volume attached directly to instances in different AZs.",
+          "Use DynamoDB without redesigning an application that requires PostgreSQL joins.",
+          "Use RDS for PostgreSQL when the application requires that relational engine and SQL transactions."
+        ],
+        "answer": "B and E",
+        "en": "EFS provides a managed NFS filesystem. RDS for PostgreSQL preserves the relational engine. S3 exposes object APIs, EBS attachment is AZ-bound, and DynamoDB requires access patterns designed for its data model.",
+        "es": "EFS proporciona un sistema de archivos NFS compartido para clientes compatibles. RDS PostgreSQL conserva ese motor y su modelo relacional. S3 usa operaciones de objetos, EBS está ligado a una AZ y DynamoDB exige diseñar los patrones de acceso para su modelo."
+      },
+      {
+        "label": "Private connectivity and permissions",
+        "prompt": "A private EC2 instance uses an S3 gateway endpoint, but GetObject returns AccessDenied. What is the best next step? Choose ONE.",
+        "options": [
+          "Assume the endpoint grants permission and wait.",
+          "Add a public IP because all S3 access requires internet access.",
+          "Check the caller, action, object ARN, applicable policies and denies, and KMS permissions if relevant.",
+          "Replace Route 53 with a queue."
+        ],
+        "answer": "C",
+        "en": "A gateway endpoint provides connectivity, not automatic authorization. AccessDenied points toward an authorization investigation. For a timeout, start by checking DNS, routing and connectivity.",
+        "es": "El gateway endpoint aporta conectividad privada a S3, pero no concede permisos. Ante AccessDenied revisa principal, acción, ARN, políticas y denegaciones; si hay SSE-KMS, también el acceso a la clave. Ante un timeout empezarías por DNS, rutas y conectividad."
+      },
+      {
+        "label": "Queues and idempotency",
+        "prompt": "A worker receives an SQS Standard message, completes a payment update, then crashes before deleting the message. Which TWO statements are correct? Choose TWO.",
+        "options": [
+          "SQS knows the payment completed and permanently deletes the message.",
+          "The API’s earlier 202 Accepted response proves the payment finished.",
+          "Standard queues guarantee exactly one delivery to the application.",
+          "The message can become visible again after its visibility timeout expires.",
+          "The worker should handle repeated delivery without applying the payment update twice."
+        ],
+        "answer": "D and E",
+        "en": "A received message is temporarily hidden and must be deleted after successful processing. Standard queues can deliver duplicates. Idempotent processing prevents a repeated delivery from duplicating the business effect.",
+        "es": "Al recibir el mensaje, SQS lo oculta temporalmente. Si el worker no lo elimina, puede volver a entregarse al vencer el visibility timeout; Standard también puede entregar duplicados. La operación debe ser idempotente para no aplicar el pago dos veces. Un 202 confirma aceptación, no finalización."
+      },
+      {
+        "label": "Monitoring and audit",
+        "prompt": "CPU usage rises after an IAM policy change. Which pairing helps investigate the symptom and identify who made the change? Choose ONE.",
+        "options": [
+          "CloudWatch for metrics and alarms; CloudTrail for API activity.",
+          "CloudTrail for CPU metrics; ECR for the identity that changed the policy.",
+          "Route 53 for CPU metrics; EBS for API history.",
+          "Secrets Manager for metrics; Fargate for policy audit history."
+        ],
+        "answer": "A",
+        "en": "CloudWatch provides metrics, logs and alarms. CloudTrail records API activity such as policy changes. AWS Config provides recorded configuration history and rule evaluations for monitored supported resources.",
+        "es": "CloudWatch permite investigar CPU, métricas, logs y alarmas. CloudTrail registra actividad de API y ayuda a identificar quién cambió la política. AWS Config permite consultar cambios de configuración y evaluar reglas en recursos compatibles que ya se estén registrando."
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Architecture reasoning",
+    "reading": "06-criterios-de-arquitectura.md",
+    "questions": [
+      {
+        "label": "RTO and RPO",
+        "prompt": "An outage starts at 11:00. The latest recoverable data is from 10:44, and service resumes at 11:35. The objectives are RPO 15 minutes and RTO 60 minutes. Which statement is correct? Choose ONE.",
+        "options": [
+          "Both objectives are met.",
+          "RTO is met, but RPO is missed by one minute.",
+          "RPO is met, but RTO is missed by one minute.",
+          "Neither objective is met."
+        ],
+        "answer": "B",
+        "en": "The interruption lasts 35 minutes, within the 60-minute RTO. The recoverable data is 16 minutes old at the failure, exceeding the 15-minute RPO.",
+        "es": "El RTO mide la interrupción: de 11:00 a 11:35 son 35 minutos, dentro del máximo de 60. El RPO mide el retroceso de los datos: de 10:44 a 11:00 son 16 minutos, uno más de lo permitido. Puedes cumplir un objetivo y fallar el otro."
+      },
+      {
+        "label": "Availability and durability",
+        "prompt": "A storage service temporarily cannot serve reads, but all stored objects remain intact. Which distinction does this illustrate? Choose ONE.",
+        "options": [
+          "Durability and availability always fail together.",
+          "Latency measures the amount of data lost.",
+          "Availability can be affected while durability is preserved.",
+          "Elasticity guarantees that every read succeeds."
+        ],
+        "answer": "C",
+        "en": "Availability concerns access to the service under agreed conditions; durability concerns retaining stored data. An access outage does not necessarily imply data loss.",
+        "es": "Availability describe si puedes usar el servicio; durability, si se conserva lo almacenado. Un fallo temporal de lectura puede afectar al acceso sin destruir los objetos. Latency mide tiempo de una operación y elasticity ajusta capacidad: son conceptos distintos."
+      },
+      {
+        "label": "Scaling and state",
+        "prompt": "A web application stores user sessions only in each server’s local memory. The team wants to add servers and distribute requests among them. What must the design address? Choose ONE.",
+        "options": [
+          "How session state remains available when requests reach different servers.",
+          "Only increasing the disk size of the original server.",
+          "Moving the DNS zone to the same AZ as the original server.",
+          "Replacing the application role with root credentials."
+        ],
+        "answer": "A",
+        "en": "Horizontal scaling adds units. Requests may reach different servers, so locally stored session state needs an appropriate shared store or another design that satisfies session requirements.",
+        "es": "El escalado horizontal añade servidores. Si cada uno guarda la sesión solo en su memoria, una petición que llegue a otro puede perder ese contexto. Hay que resolver dónde vive el estado, por ejemplo con un almacén apropiado o rediseñando el flujo según los requisitos."
+      },
+      {
+        "label": "Acceptance and completion latency",
+        "prompt": "An API enqueues report jobs and returns 202 Accepted in one second. The backlog keeps growing and reports take an hour to finish. Which conclusion is correct? Choose ONE.",
+        "options": [
+          "The one-second API response proves reports finish within one second.",
+          "A queue guarantees that completion latency stays constant.",
+          "The backlog proves the API cannot accept requests.",
+          "Acceptance latency can meet its target while report completion latency misses its target."
+        ],
+        "answer": "D",
+        "en": "Accepting work and finishing work are different measurements. A growing backlog can increase waiting time even while enqueue requests receive fast acknowledgements.",
+        "es": "La API confirma rápido que ha aceptado el encargo, pero el informe aún no está terminado. Si la cola crece, aumenta la espera hasta completarlo. Hay que medir tiempo de aceptación, tiempo de entrega final y capacidad de los consumidores por separado."
+      },
+      {
+        "label": "Standby and read replicas",
+        "prompt": "A database uses an RDS Multi-AZ DB instance deployment with one standby. The application also needs to scale read traffic. Which statement is correct? Choose ONE.",
+        "options": [
+          "The standby is automatically the read endpoint for application queries.",
+          "The standby supports failover; a read replica is a separate option for read scaling.",
+          "A read replica and a Multi-AZ standby are interchangeable in every deployment.",
+          "Multi-AZ means the standby is in a different AWS Region."
+        ],
+        "answer": "B",
+        "en": "In a Multi-AZ DB instance deployment, the standby supports availability and does not serve application reads. A typical read replica serves reads. Multi-AZ DB clusters are a different configuration.",
+        "es": "El enunciado especifica Multi-AZ DB instance: su standby apoya el failover y no atiende lecturas de la aplicación. Una read replica típica sirve para escalar lecturas. No lo confundas con un Multi-AZ DB cluster, que es otra configuración y puede incluir lectores."
+      },
+      {
+        "label": "Recovery strategies",
+        "prompt": "A secondary Region contains a working copy of an application at reduced capacity. After a disaster, traffic is redirected there and capacity is increased. Which strategy is described? Choose ONE.",
+        "options": [
+          "Backup and restore.",
+          "Pilot light with only the data tier running.",
+          "Warm standby.",
+          "Multi-site active/active with both sites already serving normal traffic."
+        ],
+        "answer": "C",
+        "en": "Warm standby keeps a functional deployment at reduced capacity. Backup and restore recreates from backups; pilot light keeps a smaller core; active/active already serves traffic in multiple locations.",
+        "es": "Warm standby mantiene una versión funcional del sistema con capacidad reducida, lista para asumir tráfico y escalar. En backup and restore hay que reconstruir desde copias; pilot light mantiene un núcleo mínimo; active/active ya sirve tráfico desde varias ubicaciones."
+      },
+      {
+        "label": "Filtering by requirements",
+        "prompt": "A company requires automatic failover and asks for the lowest operating cost among designs that meet that requirement. One design is cheaper but requires manual promotion. How should it be evaluated? Choose ONE.",
+        "options": [
+          "Reject it because it does not meet the automatic failover requirement.",
+          "Select it because cost always overrides other requirements.",
+          "Treat manual promotion as automatic if the procedure is documented.",
+          "Ignore failover and compare only instance prices."
+        ],
+        "answer": "A",
+        "en": "Mandatory requirements eliminate options before optimization. Compare the costs of designs that satisfy automatic failover, including their required dependencies.",
+        "es": "Primero filtra por requisitos obligatorios. Si se exige failover automático, una promoción manual queda fuera aunque sea más barata. Después compara el coste completo de las opciones que sí cumplen, incluidas sus dependencias."
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Costs and practice environments",
+    "reading": "07-costes-y-entornos.md",
+    "questions": [
+      {
+        "label": "Budget alerts",
+        "prompt": "A lab account has a monthly AWS Budgets alert at USD 5. What does this alert guarantee? Choose ONE.",
+        "options": [
+          "All resources stop immediately at USD 5.",
+          "The account cannot incur any charges above USD 5.",
+          "Every service becomes free after the alert.",
+          "It can notify when the configured threshold is reached; it is not a hard spending cap."
+        ],
+        "answer": "D",
+        "en": "A budget notification does not automatically cap spending. Cost reporting can be delayed and resources may continue generating charges. Separately configured actions or project limits have their own scope.",
+        "es": "Un aviso de Budgets no es un tope de gasto. El consumo puede aparecer con retraso y los recursos pueden seguir cobrando. Las acciones configuradas y los límites de proyecto son mecanismos distintos cuyo alcance debes comprobar."
+      },
+      {
+        "label": "Estimating and analyzing costs",
+        "prompt": "Which TWO tools match these tasks: estimate a design before creating it, and investigate which services explain changes in observed costs? Choose TWO.",
+        "options": [
+          "CloudTrail for estimating infrastructure prices.",
+          "AWS Pricing Calculator for estimating the proposed design.",
+          "IAM Access Analyzer for historical billing trends.",
+          "ECR for checking applied billing credits.",
+          "AWS Cost Explorer for analyzing cost trends and contributing services."
+        ],
+        "answer": "B and E",
+        "en": "Pricing Calculator estimates a scenario from its assumptions. Cost Explorer analyzes cost and usage trends. Bills shows billed items and applied credits; Budgets monitors thresholds.",
+        "es": "Pricing Calculator estima antes de crear, a partir de región, horas, tamaños y tráfico. Cost Explorer ayuda a explicar la evolución del coste observado. Bills muestra conceptos facturados y créditos aplicados; Budgets vigila umbrales. Cada herramienta responde a una pregunta distinta."
+      },
+      {
+        "label": "Costs after stopping compute",
+        "prompt": "An engineer stops an EC2 instance and assumes all lab charges have ended. Which action is most appropriate? Choose ONE.",
+        "options": [
+          "Do nothing because stopping an instance deletes all related resources.",
+          "Delete the CLI profile to stop billing.",
+          "Inventory retained resources such as EBS volumes, snapshots, NAT gateways and load balancers, then remove unneeded lab resources.",
+          "Move the console to another Region to stop the original Region’s charges."
+        ],
+        "answer": "C",
+        "en": "Stopping the instance does not delete all storage and supporting resources. Check the resources actually created, their dependencies, and any other Regions used; review billing again after usage appears.",
+        "es": "Parar EC2 no elimina automáticamente volúmenes, snapshots, NAT ni balanceadores. Revisa el inventario real del laboratorio y borra lo que ya no necesites respetando dependencias. Cambiar de región en la consola o borrar un perfil no elimina recursos ni detiene su facturación."
+      },
+      {
+        "label": "Versioned bucket cleanup",
+        "prompt": "A disposable S3 bucket has versioning enabled. The engineer deletes the visible objects but storage remains. What is needed to fully empty the bucket before deleting it? Choose ONE.",
+        "options": [
+          "Remove all object versions and delete markers after confirming the bucket is the disposable lab bucket.",
+          "Delete only the newest delete marker for each key.",
+          "Disable the CLI profile that uploaded the objects.",
+          "Assume ordinary object deletion removed all stored versions."
+        ],
+        "answer": "A",
+        "en": "An ordinary delete in a versioned bucket can add a delete marker while retaining earlier versions. Complete cleanup must include all versions and delete markers, with the target bucket verified first.",
+        "es": "En un bucket con versionado, un borrado normal puede añadir un delete marker y conservar versiones anteriores que siguen ocupando almacenamiento. Para vaciarlo completamente debes eliminar todas las versiones y marcadores, verificando antes que es el bucket descartable del laboratorio."
+      },
+      {
+        "label": "Interruptible compute",
+        "prompt": "A batch workload can checkpoint progress and safely retry interrupted jobs. Its main goal is lower EC2 compute cost, and it can tolerate capacity interruptions. Which purchase option is worth evaluating? Choose ONE.",
+        "options": [
+          "A Savings Plan without checking eligible baseline demand.",
+          "An upfront commitment solely because the workload is a lab.",
+          "On-Demand because it is always cheaper than every alternative.",
+          "EC2 Spot capacity, with interruption handling in the workload."
+        ],
+        "answer": "D",
+        "en": "Spot uses available capacity at a lower price with interruption risk. Retryable work can fit that tradeoff. Commitments should follow measured eligible baseline demand and their terms.",
+        "es": "Spot puede encajar en trabajo que admite interrupciones y reintentos. La aplicación debe conservar progreso cuando proceda y repetir encargos de forma segura. Un compromiso de gasto se decide tras medir la demanda base y revisar elegibilidad y condiciones, no solo porque sea un laboratorio."
+      },
+      {
+        "label": "S3 paths and NAT costs",
+        "prompt": "Private instances send data only to S3 in the same Region through a NAT gateway. The design supports an S3 gateway endpoint. Which statement is correct? Choose ONE.",
+        "options": [
+          "The endpoint automatically grants all S3 permissions.",
+          "The endpoint can remove that traffic’s NAT path; retiring an unused NAT gateway also avoids its ongoing charges.",
+          "An S3 gateway endpoint provides arbitrary public internet access.",
+          "Moving S3 traffic to the endpoint eliminates all S3 storage and request charges."
+        ],
+        "answer": "B",
+        "en": "An S3 gateway endpoint can avoid NAT for supported S3 traffic. NAT charges may remain if the gateway is retained, and S3 charges still apply. Other internet traffic needs its own route and IAM authorization still matters.",
+        "es": "El endpoint puede evitar el paso por NAT para ese tráfico a S3. Si mantienes el NAT, puede seguir generando cargos por tiempo; si ya no hace falta, retirarlo evita esos cargos. S3 sigue teniendo su propia facturación y el endpoint no concede permisos ni salida general a internet."
+      },
+      {
+        "label": "Practice context and evidence",
+        "prompt": "Before following a public AWS workshop with a personal account, which TWO checks are appropriate? Choose TWO.",
+        "options": [
+          "Assume the workshop provides a sandbox because the instructions are public.",
+          "Assume successful emulator tests prove real AWS IAM and VPC behavior.",
+          "Verify the active account, Region, plan, credit coverage and who pays for the resources.",
+          "Estimate required resources and plan cleanup and billing checks.",
+          "Assume all services are free while any credit balance remains."
+        ],
+        "answer": "C and D",
+        "en": "Public instructions do not establish who pays. Verify the actual environment and billing terms, estimate usage, and plan cleanup. Emulator success validates the supported local flow, not every AWS permission, network or billing behavior.",
+        "es": "Un workshop público puede pedir que uses tu propia cuenta: no garantiza sandbox. Comprueba cuenta, región, plan, cobertura y caducidad de créditos, y quién paga. Estima y planifica limpieza. Que algo funcione en un emulador no demuestra el comportamiento real de IAM, VPC o facturación en AWS."
+      }
+    ]
+  }
+]

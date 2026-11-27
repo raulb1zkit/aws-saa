@@ -1,6 +1,7 @@
 <nav class="lesson-nav" aria-label="Lecturas">
   <a href="{{ '/' | relative_url }}"{% if page.url == '/' or page.url == '/index.html' %} aria-current="page"{% endif %}>Índice</a>
-  <a href="{{ '/fundamentos/test-01-05.html' | relative_url }}"{% if page.url == '/fundamentos/test-01-05.html' %} aria-current="page"{% endif %}>Test de Fundamentos 1–5</a>
+  <a href="{{ '/fundamentos/tests.html' | relative_url }}"{% if page.url == '/fundamentos/tests.html' %} aria-current="page"{% endif %}>Tests de Fundamentos 1–7</a>
+  <a href="{{ '/fundamentos/test-01-07.html' | relative_url }}"{% if page.url == '/fundamentos/test-01-07.html' %} aria-current="page"{% endif %}>Test completo 1–7</a>
   <p class="nav-label">Fundamentos</p>
   <ol>
     {% assign lessons = site.pages | where_exp: 'lesson', 'lesson.study_order' | sort: 'study_order' %}

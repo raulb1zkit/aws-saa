@@ -66,4 +66,6 @@ Consultadas el 24 de noviembre de 2026.
 - [Cifrado por defecto de S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/default-bucket-encryption.html)
 - [Protección de datos en tránsito y en reposo](https://docs.aws.amazon.com/IAM/latest/UserGuide/data-protection.html), [SSE-KMS en S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html) y [protección de datos en Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/data-protection.html)
 
+[Comprobar este tema con el test 03](test-03.md) · [Todos los tests](tests.md)
+
 [Índice de estudio](../README.md) · [Lectura anterior](02-infraestructura-global.md) · [Lectura siguiente](04-iam-y-acceso.md)

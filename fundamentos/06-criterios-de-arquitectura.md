@@ -89,4 +89,6 @@ Consultadas el 24 de noviembre de 2026.
 - [RDS Multi-AZ DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html), [réplicas de lectura](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html) y [conexiones en Multi-AZ DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts-connection-management.html)
 - [Cómo CloudFront entrega contenido](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HowCloudFrontWorks.html)
 
+[Comprobar este tema con el test 06](test-06.md) · [Todos los tests](tests.md)
+
 [Índice de estudio](../README.md) · [Lectura anterior](05-mapa-de-servicios.md) · [Lectura siguiente](07-costes-y-entornos.md)

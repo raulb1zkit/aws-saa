@@ -78,4 +78,6 @@ Para un primer ensayo de S3 basta subir un fichero ficticio dos veces con la mis
 - [AWS Educate](https://aws.amazon.com/education/awseducate/), [AWS Academy](https://aws.amazon.com/training/awsacademy/), [AWS Skill Builder](https://aws.amazon.com/training/digital/) y [AWS Workshop Studio](https://catalog.workshops.aws/)
 - [Repositorio oficial de Floci](https://github.com/floci-io/floci) y [cobertura de S3 en Floci](https://floci.io/floci/services/s3/)
 
+[Comprobar este tema con el test 07](test-07.md) · [Todos los tests](tests.md)
+
 [Índice de estudio](../README.md) · [Lectura anterior](06-criterios-de-arquitectura.md)

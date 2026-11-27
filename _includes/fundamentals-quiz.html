@@ -1,0 +1,31 @@
+{% assign question_number = 0 %}
+{% for lesson in site.data.fundamentals %}
+  {% if page.quiz_lessons contains lesson.id %}
+<h2 id="lesson-{{ lesson.id }}">{{ lesson.id | prepend: '0' | slice: -2, 2 }} {{ lesson.title | escape }}</h2>
+    {% for question in lesson.questions %}
+      {% assign question_number = question_number | plus: 1 %}
+<details class="quiz-question">
+  <summary>Question {{ question_number | prepend: '0' | slice: -2, 2 }} · {{ question.label | escape }}</summary>
+  <div class="quiz-body">
+    <p>{{ question.prompt | escape }}</p>
+    <ul class="quiz-options">
+      {% assign letters = 'A,B,C,D,E' | split: ',' %}
+      {% for option in question.options %}
+      <li><strong>{{ letters[forloop.index0] }}.</strong> {{ option | escape }}</li>
+      {% endfor %}
+    </ul>
+    <details class="quiz-answer" lang="en">
+      <summary>Show answer and explanation in English</summary>
+      <p><strong>Correct answer: {{ question.answer | escape }}.</strong> {{ question.en | escape }}</p>
+    </details>
+    <details class="quiz-answer" lang="es">
+      <summary>Ver respuesta y explicación en español</summary>
+      <p><strong>Respuesta correcta: {{ question.answer | replace: ' and ', ' y ' | escape }}.</strong> {{ question.es | escape }}</p>
+    </details>
+    {% assign reading_url = lesson.reading | replace: '.md', '.html' | prepend: '/fundamentos/' %}
+    <p><a href="{{ reading_url | relative_url }}">Review lesson {{ lesson.id | prepend: '0' | slice: -2, 2 }}</a></p>
+  </div>
+</details>
+    {% endfor %}
+  {% endif %}
+{% endfor %}

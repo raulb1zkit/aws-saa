@@ -65,4 +65,6 @@ Consultadas el 24 de noviembre de 2026.
 - [Well-Architected sobre despliegues en varias ubicaciones](https://docs.aws.amazon.com/wellarchitected/latest/framework/rel10-bp01.html)
 - [Opciones de cómputo de AWS](https://docs.aws.amazon.com/decision-guides/latest/decision-guides/choosing-aws-compute-service.html)
 
+[Comprobar este tema con el test 02](test-02.md) · [Todos los tests](tests.md)
+
 [Índice de estudio](../README.md) · [Lectura anterior](01-modelo-aws.md) · [Lectura siguiente](03-responsabilidad-compartida.md)
